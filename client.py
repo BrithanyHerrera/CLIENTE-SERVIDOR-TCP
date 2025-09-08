@@ -2,7 +2,7 @@ import socket
 import threading
 import sys
 
-HOST = "127.0.0.1"
+HOST = "10.136.245.254"
 PORT = 65432
 
 def recv_loop(f):
