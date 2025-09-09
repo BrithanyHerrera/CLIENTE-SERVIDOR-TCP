@@ -7,8 +7,11 @@ PORT = 65432
 # Usuarios de ejemplo
 USERS = {
     "isma": "1234",
-    "admin": "admin",
-    "guest": "guest",
+    "Ana":"2512",
+    "Kevin":"4343",
+    "Gibran":"sexoplus",
+    "Lalo":"123",
+    "Bri":"Bri2"
 }
 
 clients = {}  # conn -> {"user": str, "file": filelike}
