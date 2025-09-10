@@ -4,7 +4,7 @@ import threading
 HOST = "0.0.0.0"
 PORT = 65432
 
-# Usuarios de ejemplo
+# Usuarios
 USERS = {
     "isma": "1234",
     "Ana":"2512",
