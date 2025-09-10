@@ -52,13 +52,10 @@ Pasos
         se intenta enviar "QUIT\n" para cerrar de forma ordenada.
 """
 
-import socket
-import threading
-import sys
+import socket # Comunicación de red, permite la creación de usuarios y servidores.
+import threading # Ejecuta cosas en paralelo, lo que permite "escuchar" al server.
+import sys # Acceso.
 
-# =============================
-# Configuración de conexión TCP
-# =============================
 # Dirección IP del servidor de chat (Laptop BRI).
 HOST = "10.136.245.254"
 # Puerto TCP del servidor (Revisar puerto libre según el disp).
