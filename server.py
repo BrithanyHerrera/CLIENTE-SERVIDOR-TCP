@@ -4,17 +4,17 @@ import threading
 HOST = "0.0.0.0"
 PORT = 65432
 
-# Usuarios de ejemplo
+# Usuarios permitidos y sus contraseñas
 USERS = {
     "isma": "1234",
     "Ana":"2512",
     "Kevin":"4343",
-    "Gibran":"sexoplus",
+    "Gibran":"plus",
     "Lalo":"123",
     "Bri":"Bri2"
 }
 
-clients = {}  # conn -> {"user": str, "file": filelike}
+clients = {}
 clients_lock = threading.Lock()
 
 def send_line(f, s: str):
@@ -28,6 +28,7 @@ def broadcast(line: str):
         for info in list(clients.values()):
             send_line(info["file"], line)
 
+#crea un hilo para cada usuario
 def handle_client(conn, addr):
     f = conn.makefile("rwb", buffering=0)
     authed = False
@@ -57,6 +58,7 @@ def handle_client(conn, addr):
                 if len(parts) != 2:
                     send_line(f, "500 ERROR Missing credentials")
                     continue
+                #Validacion de usuario y contraseña
                 user, pwd = parts[0], parts[1]
                 if USERS.get(user) == pwd:
                     authed = True
@@ -64,7 +66,7 @@ def handle_client(conn, addr):
                     with clients_lock:
                         clients[conn] = {"user": username, "file": f}
                     send_line(f, "230 AUTH OK")
-                    # Anuncia ingreso (opcional)
+                    # Mensaje de conexion
                     broadcast(f"250 MSG server {username} se ha conectado")
                 else:
                     send_line(f, "430 AUTH FAIL")
@@ -76,7 +78,7 @@ def handle_client(conn, addr):
                 # rest es el texto completo, puede tener espacios
                 text = rest
                 broadcast(f"250 MSG {username} {text}")
-
+            #Comando de salida
             elif cmd == "QUIT":
                 send_line(f, "221 BYE")
                 break
@@ -85,14 +87,13 @@ def handle_client(conn, addr):
                 send_line(f, "500 ERROR Unknown command")
 
     except Exception:
-        # Podrías loggear aquí
         pass
     finally:
         # Limpieza
         with clients_lock:
             if conn in clients:
                 gone = clients.pop(conn)
-                # Aviso de salida (opcional)
+                # Mensaje de salida
                 broadcast(f"250 MSG server {gone['user']} salió")
         try:
             f.close()
